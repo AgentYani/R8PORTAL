@@ -1,0 +1,272 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', var(--font-sans), sans-serif; }
+  .wrap { padding: 2rem 1.5rem; max-width: 680px; }
+  .header { margin-bottom: 2rem; }
+  .header-tag { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1.2; }
+  .header-sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 6px; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+  .section-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 12px; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; }
+  .metric-val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; line-height: 1.3; }
+  .risk-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; background: var(--color-background-primary); }
+  .risk-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .risk-id { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .risk-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.35; flex: 1; }
+  .badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 999px; }
+  .badge-gov { background: #EEEDFE; color: #3C3489; }
+  .badge-ops { background: #E1F5EE; color: #085041; }
+  .badge-very-high { background: #F7C1C1; color: #791F1F; }
+  .badge-moderate { background: #FAC775; color: #633806; }
+  .badge-major { background: #FAECE7; color: #712B13; }
+  .badge-avoid { background: #EEEDFE; color: #3C3489; }
+  .badge-reduce { background: #EAF3DE; color: #27500A; }
+  .badge-status-open { background: #FAC775; color: #633806; }
+  .badge-status-up { background: #C0DD97; color: #27500A; }
+  .risk-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+  .risk-body strong { font-weight: 500; color: var(--color-text-primary); }
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 10px; }
+  .risk-field label { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary); display: block; margin-bottom: 2px; }
+  .risk-field span { font-size: 12px; color: var(--color-text-primary); }
+  .risk-action { margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--color-border-tertiary); font-size: 12px; color: var(--color-text-secondary); line-height: 1.55; }
+  .risk-action strong { color: var(--color-text-primary); font-weight: 500; }
+  .matrix-wrap { margin-bottom: 1.5rem; }
+  .matrix { display: grid; grid-template-columns: 36px repeat(5, 1fr); grid-template-rows: repeat(5, 36px) 36px; gap: 3px; font-size: 10px; font-weight: 500; }
+  .m-cell { border-radius: 4px; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.2; }
+  .m-label { color: var(--color-text-secondary); font-size: 9px; }
+  .m-vl { background: #EAF3DE; color: #3B6D11; }
+  .m-low { background: #C0DD97; color: #27500A; }
+  .m-tol { background: #FAC775; color: #633806; }
+  .m-high { background: #F0997B; color: #712B13; }
+  .m-vh { background: #E24B4A; color: #fff; }
+  .m-dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.8); color: #222; font-size: 9px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  .axis-label { font-size: 9px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: .06em; text-align: center; margin-bottom: 4px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--color-text-secondary); }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .owner-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .owner-av { width: 28px; height: 28px; border-radius: 50%; background: var(--color-background-info); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: var(--color-text-info); flex-shrink: 0; }
+  .owner-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .owner-role { font-size: 11px; color: var(--color-text-secondary); }
+  .footer { margin-top: 2rem; padding-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); display: flex; justify-content: space-between; align-items: center; }
+  .footer-txt { font-size: 11px; color: var(--color-text-secondary); }
+</style>
+<div class="wrap">
+  <h2 class="sr-only" style="position:absolute;left:-9999px">ICT Risk Registry Infographic — Region 8, CY 2026, 3 active risks summarized with ratings and treatment plans</h2>
+
+  <div class="header">
+    <p class="header-tag">Risk Registry · CY 2026 · Region VIII</p>
+    <h1>ICT Risk Register</h1>
+    <p class="header-sub">Information and Communications Technology Division · R8 Active Risks</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-val">3</div>
+      <div class="metric-lbl">Active risks</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#E24B4A">2</div>
+      <div class="metric-lbl">Very high / major</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#EF9F27">1</div>
+      <div class="metric-lbl">Moderate</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">3</div>
+      <div class="metric-lbl">Open items</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p class="section-label">Risk matrix overview</p>
+
+  <div class="matrix-wrap">
+    <div class="axis-label">Likelihood →</div>
+    <div style="display:flex; gap:8px; align-items:flex-start;">
+      <div style="writing-mode:vertical-lr; transform:rotate(180deg); font-size:9px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.06em; padding-top:4px;">Consequence ↑</div>
+      <div style="flex:1;">
+        <div class="matrix">
+          <div class="m-cell m-label"></div>
+          <div class="m-cell m-label">Rare</div>
+          <div class="m-cell m-label">Unlikely</div>
+          <div class="m-cell m-label">Possible</div>
+          <div class="m-cell m-label">Likely</div>
+          <div class="m-cell m-label">Almost certain</div>
+
+          <div class="m-cell m-label">Catastrophic</div>
+          <div class="m-cell m-high"></div>
+          <div class="m-cell m-high"></div>
+          <div class="m-cell m-vh"></div>
+          <div class="m-cell m-vh"></div>
+          <div class="m-cell m-vh"></div>
+
+          <div class="m-cell m-label">Major</div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-high"></div>
+          <div class="m-cell m-high" style="position:relative;">
+            <span class="m-dot" title="RVIII-006">6</span>
+          </div>
+          <div class="m-cell m-vh" style="position:relative;">
+            <span class="m-dot" title="RVIII-007/008">7&8</span>
+          </div>
+          <div class="m-cell m-vh"></div>
+
+          <div class="m-cell m-label">Moderate</div>
+          <div class="m-cell m-low"></div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-high"></div>
+          <div class="m-cell m-high"></div>
+
+          <div class="m-cell m-label">Minor</div>
+          <div class="m-cell m-vl"></div>
+          <div class="m-cell m-low"></div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-high"></div>
+
+          <div class="m-cell m-label">Insignificant</div>
+          <div class="m-cell m-vl"></div>
+          <div class="m-cell m-vl"></div>
+          <div class="m-cell m-low"></div>
+          <div class="m-cell m-tol"></div>
+          <div class="m-cell m-tol"></div>
+        </div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-sq" style="background:#EAF3DE"></div>Very low</div>
+          <div class="leg-item"><div class="leg-sq" style="background:#C0DD97"></div>Low</div>
+          <div class="leg-item"><div class="leg-sq" style="background:#FAC775"></div>Tolerable</div>
+          <div class="leg-item"><div class="leg-sq" style="background:#F0997B"></div>High</div>
+          <div class="leg-item"><div class="leg-sq" style="background:#E24B4A"></div>Very high</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p class="section-label">Risk details</p>
+
+  <div class="risk-card">
+    <div class="risk-header">
+      <div>
+        <div class="risk-title">Outdated security features of hardware and software</div>
+      </div>
+      <span class="risk-id">RVIII-006</span>
+    </div>
+    <div class="badges">
+      <span class="badge badge-gov">Governance</span>
+      <span class="badge badge-major">Major consequence</span>
+      <span class="badge badge-major">Possible likelihood</span>
+      <span class="badge badge-avoid">Avoid</span>
+      <span class="badge badge-status-up">Updated</span>
+    </div>
+    <div class="risk-body">
+      <strong>Event:</strong> Outdated security features leave hardware peripherals and software vulnerable to exploits.<br>
+      <strong>Cause:</strong> Lack of awareness among users and administrators.<br>
+      <strong>Consequence:</strong> Exposure to cyberattacks including malware, data breaches, and unauthorized access.
+    </div>
+    <div class="risk-grid">
+      <div class="risk-field"><label>Existing controls</label><span>Hardware/software update notifications</span></div>
+      <div class="risk-field"><label>Residual rating</label><span>Major (Likely)</span></div>
+      <div class="risk-field"><label>Timeline</label><span>2023–2025</span></div>
+      <div class="risk-field"><label>Resource</label><span>Internet connection</span></div>
+    </div>
+    <div class="risk-action">
+      <strong>Treatment:</strong> Prepare and implement a preventive maintenance plan for all hardware and software assets. Conduct training and planning sessions with ICT personnel.
+    </div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-header">
+      <div>
+        <div class="risk-title">Unauthorized access to information systems, websites, and databases</div>
+      </div>
+      <span class="risk-id">RVIII-007</span>
+    </div>
+    <div class="badges">
+      <span class="badge badge-gov">Governance</span>
+      <span class="badge badge-tol" style="background:#FAC775;color:#633806">Moderate consequence</span>
+      <span class="badge badge-major">Possible likelihood</span>
+      <span class="badge badge-avoid">Avoid</span>
+      <span class="badge badge-status-open">Ongoing</span>
+    </div>
+    <div class="risk-body">
+      <strong>Event:</strong> Unauthorized access to IS, websites, database administration, and management systems.<br>
+      <strong>Cause:</strong> Unsecured files and credentials.<br>
+      <strong>Consequence:</strong> Moderate data exposure risk; no existing controls currently in place.
+    </div>
+    <div class="risk-grid">
+      <div class="risk-field"><label>Existing controls</label><span>None identified</span></div>
+      <div class="risk-field"><label>Residual rating</label><span>Major (Likely)</span></div>
+      <div class="risk-field"><label>Timeline</label><span>All year round</span></div>
+      <div class="risk-field"><label>Resource</label><span>Internet connection</span></div>
+    </div>
+    <div class="risk-action">
+      <strong>Treatment:</strong> Implement strong password policies, enable two-factor authentication (2FA), and deploy an identity access management (IAM) solution across all ICT systems.
+    </div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-header">
+      <div>
+        <div class="risk-title">Cybersecurity attack on ICT infrastructure</div>
+      </div>
+      <span class="risk-id">RVIII-008</span>
+    </div>
+    <div class="badges">
+      <span class="badge badge-ops">Operational</span>
+      <span class="badge badge-major">Major consequence</span>
+      <span class="badge badge-major">Possible likelihood</span>
+      <span class="badge badge-avoid">Avoid</span>
+      <span class="badge" style="background:#E1F5EE;color:#085041">Controlled</span>
+    </div>
+    <div class="risk-body">
+      <strong>Event:</strong> Cybersecurity attack on ICT division systems and data.<br>
+      <strong>Cause:</strong> Vulnerabilities to malware, phishing, social engineering, and weak authentication.<br>
+      <strong>Consequence:</strong> Data breaches exposing sensitive information; operational disruption and loss of productivity.
+    </div>
+    <div class="risk-grid">
+      <div class="risk-field"><label>Existing controls</label><span>None identified</span></div>
+      <div class="risk-field"><label>Residual rating</label><span>Major (Likely)</span></div>
+      <div class="risk-field"><label>Timeline</label><span>All year round</span></div>
+      <div class="risk-field"><label>Resource</label><span>ICT personnel · Internet</span></div>
+    </div>
+    <div class="risk-action">
+      <strong>Treatment:</strong> Conduct semi-annual cybersecurity awareness training; hire a cybersecurity specialist to coordinate with DICT monthly on vulnerabilities and exploits; implement a Security Operations Center (SOC).
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p class="section-label">Risk ownership</p>
+
+  <div class="owner-row">
+    <div class="owner-av">IC</div>
+    <div>
+      <div class="owner-name">ICTS</div>
+      <div class="owner-role">Risk Owner — RVIII-006, 007, 008 · Responsible Entity</div>
+    </div>
+    <div style="margin-left:auto;">
+      <span class="badge badge-ops" style="font-size:10px;">3 risks</span>
+    </div>
+  </div>
+  <div class="owner-row" style="border-bottom:none;">
+    <div class="owner-av" style="background:var(--color-background-success);color:var(--color-text-success);">IC</div>
+    <div>
+      <div class="owner-name">ICT Personnel</div>
+      <div class="owner-role">Responsible persons — units where devices are assigned</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-txt">ICT Division · Region VIII · CY 2026</span>
+    <span class="footer-txt">All 3 risks status: <strong style="color:var(--color-text-primary)">Open</strong></span>
+  </div>
+</div>
